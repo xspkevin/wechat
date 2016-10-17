@@ -43,7 +43,8 @@ try {
 
     // 定义命名空间
     $loader->registerNamespaces([
-        'EasyWechat' => APP_PATH . 'app' . DS . 'library' . DS . 'easywechat' . DS . 'src'
+        'EasyWechat' => APP_PATH . 'app' . DS . 'library' . DS . 'easywechat' . DS . 'src',
+        'EasyWechat\\Foundation' => APP_PATH . 'app' . DS . 'library' . DS . 'easywechat' . DS . 'src' . DS . 'Foundation'
     ])->register();
 
     // Create a DI
