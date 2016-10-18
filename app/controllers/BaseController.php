@@ -17,6 +17,7 @@ class BaseController extends Controller
     public function initialize()
     {
         $this->view->config = $this->config; // 设置视图的配置项
+        require_once(APP_PATH . 'vendor/autoload.php');
     }
 
     public function beforeExecuteRoute()

@@ -14,6 +14,7 @@ use Phalcon\Di\FactoryDefault;
 use Phalcon\Mvc\Url as UrlProvider;
 use Phalcon\Db\Adapter\Pdo\Mysql as DbAdapter;
 use Phalcon\Config;
+use Phalcon\Mvc\Dispatcher;
 
 define('DS', DIRECTORY_SEPARATOR); // 分隔符
 define('APP_PATH', realpath('..') . '/');   // 定义APP PATH
@@ -40,12 +41,6 @@ try {
         APP_PATH . 'app/models/',
         APP_PATH . 'app/library/',
     ))->register();
-
-    // 定义命名空间
-    $loader->registerNamespaces([
-        'EasyWechat' => APP_PATH . 'app' . DS . 'library' . DS . 'easywechat' . DS . 'src',
-        'EasyWechat\\Foundation' => APP_PATH . 'app' . DS . 'library' . DS . 'easywechat' . DS . 'src' . DS . 'Foundation'
-    ])->register();
 
     // Create a DI
     $di = new FactoryDefault();
