@@ -15,6 +15,8 @@ $defaultGroup = new RouterGroup();
 
 /* ------------------------------------------------------------------------------------- */
 $defaultGroup->add('/', ['controller' => 'index', 'action' => 'index']); // 首页
+$defaultGroup->add('/signin', ['controller' => 'member', 'action' => 'signin']); // 登录
+$defaultGroup->add('/logout', ['controller' => 'member', 'action' => 'logout']); // 登出
 /* ------------------------------------------------------------------------------------- */
 
 $router->mount($defaultGroup); // 挂载路由组

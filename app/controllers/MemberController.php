@@ -13,18 +13,22 @@ class MemberController extends BaseController
      */
     public function signinAction()
     {
-        $username = $_POST['username'];
-        $password = $_POST['password'];
-        $remember_me = $_POST['remember_me'];
-        header("Content-type: application/json");
-        if ($username == 'admin' && $password == '123456')
-        {
-            $this->session->set('username', $username);
-            $response = array('errcode' => 0, 'msg' => 'success');
-        } else {
-            $response = array('errcode' => 1, 'msg' => '邮箱或密码错误！');
+        if (isset($_POST['username']) && isset($_POST['password'])) {
+            $username = $_POST['username'];
+            $password = $_POST['password'];
+            $remember_me = $_POST['remember_me'];
+            header("Content-type: application/json");
+            if ($username == 'admin' && $password == '123456')
+            {
+                $this->session->set('username', $username);
+                $response = array('errcode' => 0, 'msg' => 'success');
+            } else {
+                $response = array('errcode' => 1, 'msg' => '账号或密码错误！');
+            }
+            echo json_encode($response);
+            exit;
         }
-        echo json_encode($response);
+        $this->view->render('member', 'signin');
         exit;
     }
 
