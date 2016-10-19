@@ -18,7 +18,7 @@ class MemberController extends BaseController
             $password = $_POST['password'];
             $remember_me = $_POST['remember_me'];
             header("Content-type: application/json");
-            if ($username == 'admin' && $password == '123456')
+            if ($username == $this->config->username && md5($username . $this->config->password_slat . $password) == $this->config->password)
             {
                 $this->session->set('username', $username);
                 $response = array('errcode' => 0, 'msg' => 'success');

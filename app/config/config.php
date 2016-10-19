@@ -13,6 +13,10 @@ return array(
     'host'         => 'http://wechat.pengpengkeng.com', // 域名地址(测试)
     'session_max_time' => 36000 * 24, // session会话的保存时间（单位：秒）(测试)
 
+    'password_slat' => 'HbBd@Ig2l917R7$C', // 密码盐
+    'username' => 'admin', // 账号
+    'password' => 'd9478917fe60c7a2cc1a6047e92ea65b', // 加了盐的密码： md5(username + password_slat + password)
+
     /*
     'redis' => array(
         // 测试环境

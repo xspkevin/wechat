@@ -1,0 +1,45 @@
+<nav class="breadcrumb">
+    <i class="Hui-iconfont">&#xe67f;</i> 首页
+    <span class="c-gray en">&gt;</span> 用户管理
+    <span class="c-gray en">&gt;</span> 用户
+</nav>
+
+<div class="page-container">
+    <div class="cl pd-5 bg-1 bk-gray mt-20">
+        <span class="l">
+            <a href="javascript:;" onclick="member_add('添加用户','member-add.html','','510')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe62b;</i> 用户批量分组</a>
+        </span> <span class="r">共有数据：<strong><?php echo isset($total) ? $total : 0;?></strong> 条</span> </div>
+    <div class="mt-20">
+        <table class="table table-border table-bordered table-hover table-bg table-sort">
+            <thead>
+            <tr class="text-c">
+                <th width="25"><input type="checkbox" name="" value=""></th>
+                <th width="50">头像</th>
+                <th width="60">昵称</th>
+                <th width="60">用户组</th>
+                <th width="120">openid</th>
+                <th width="60">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php if (isset($result) && $result && $result->user_info_list) {?>
+            <?php foreach($result->user_info_list as $user) {?>
+                <tr class="text-c">
+                    <td><input type="checkbox" value="<?php echo $user['openid'];?>" name="openid[]"></td>
+                    <td><img style="width:50px;height:50px;" src="<?php echo $user['headimgurl'];?>" /></td>
+                    <td><?php echo $user['nickname'];?></td>
+                    <td><?php echo isset($groups[$user['groupid']]) ? $groups[$user['groupid']] : '';?></td>
+                    <td><?php echo $user['openid'];?></td>
+                    <td class="td-manage">
+                        <a href="javascript:;" onclick="member_add('添加用户','member-add.html','','510')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe62b;</i> 分组</a>
+                    </td>
+                </tr>
+            <?php }} else {?>
+                <tr class="text-c">
+                    <td colspan="6">还没有用户</td>
+                </tr>
+            <?php } ?>
+            </tbody>
+        </table>
+    </div>
+</div>

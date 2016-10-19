@@ -33,7 +33,7 @@
             <div class="row cl">
                 <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60d;</i></label>
                 <div class="formControls col-xs-8">
-                    <input id="username" name="username" type="text" placeholder="账 户" class="input-text size-L">
+                    <input id="username" name="username" type="text" placeholder="账户" class="input-text size-L">
                 </div>
             </div>
             <div class="row cl">
@@ -61,29 +61,40 @@
 </div>
 <!--<div class="footer">Copyright &copy; 2016 碰碰坑</div>-->
 <script type="text/javascript" src="/h-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="/h-ui.admin/lib/layer/2.1/layer.js"></script>
 <script type="text/javascript" src="/h-ui.admin/static/h-ui/js/H-ui.js"></script>
 <script type="text/javascript">
 $(function () {
+    $("#password").keyup(function (event) {
+        if (event.keyCode == 13) {
+            signin();
+        }
+    });
     $("#btn-submit").click(function() {
+        signin();
+    });
+    function signin() {
         var username = $.trim($("#username").val());
         var password = $.trim($("#password").val());
         var remember_me = $("#remember_me").val();
         if (username == '') {
-            alert('请输入账号！')
+            layer.alert('请输入账号！');
+            $("#username").focus();
             return false;
         }
         if (password == '') {
-            alert('请输入密码！');
+            layer.alert('请输入密码！');
+            $("#password").focus();
             return false;
         }
         $.post('/signin', {username: username, password: password, remember_me: remember_me}, function(data) {
             if (data.errcode == 0) {
                 window.location.href = "/";
             } else {
-                alert(data.msg);
+                layer.alert(data.msg);
             }
         });
-    });
+    }
 });
 </script>
 </body>
