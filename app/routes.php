@@ -19,6 +19,7 @@ $defaultGroup->add('/signin', ['controller' => 'member', 'action' => 'signin']);
 $defaultGroup->add('/logout', ['controller' => 'member', 'action' => 'logout']); // 登出
 $defaultGroup->add('/user/list', ['controller' => 'index', 'action' => 'userlist']); // 用户列表
 $defaultGroup->add('/user/group/list', ['controller' => 'index', 'action' => 'grouplist']); // 用户组列表
+$defaultGroup->add('/user/user_group', ['controller' => 'index', 'action' => 'usergroup']); // 用户分组
 $defaultGroup->add('/broadcast/group/list', ['controller' => 'index', 'action' => 'broadcast']); // 群发消息
 /* ------------------------------------------------------------------------------------- */
 

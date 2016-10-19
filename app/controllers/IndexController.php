@@ -18,7 +18,6 @@ class IndexController extends BaseController
      */
     public function initialize()
     {
-        $this->view->setTemplateAfter('main'); // 设置视图layout
         $this->wechat_options = require_once(APP_PATH . 'app/config/wechat.config.php');
         parent::initialize();
     }
@@ -28,6 +27,7 @@ class IndexController extends BaseController
      */
     public function indexAction()
     {
+        $this->view->setTemplateAfter('main'); // 设置视图layout
         $this->view->nav = 'index';
         $this->view->navtitle = '首页';
         echo $this->view->render('index', 'index');
@@ -39,11 +39,13 @@ class IndexController extends BaseController
      */
     public function userlistAction()
     {
+        $this->view->setTemplateAfter('main'); // 设置视图layout
         $this->view->nav = 'user_list';
         $this->view->navtitle = '用户';
 
         $app = new Application($this->wechat_options);
 
+        /*
         // 获取用户组
         $group = $app->user_group->lists();
         $groups = array();
@@ -68,9 +70,18 @@ class IndexController extends BaseController
             $this->view->result = $userService->batchGet($groupUsers);
             $this->view->total = $users->total;
         }
+        */
 
         echo $this->view->render('user', 'userlist');
         exit;
+    }
+
+    /**
+     * 用户分组
+     */
+    public function usergroupAction()
+    {
+        return $this->view->render('user', 'usergroup');
     }
 
     /**
@@ -78,6 +89,7 @@ class IndexController extends BaseController
      */
     public function grouplistAction()
     {
+        $this->view->setTemplateAfter('main'); // 设置视图layout
         $this->view->nav = 'group_list';
         $this->view->navtitle = '用户组';
         echo $this->view->render('user', 'grouplist');
@@ -89,6 +101,7 @@ class IndexController extends BaseController
      */
     public function broadcastAction()
     {
+        $this->view->setTemplateAfter('main'); // 设置视图layout
         $this->view->nav = 'group_broadcast';
         $this->view->navtitle = '群发消息';
         echo $this->view->render('broadcast', 'list');

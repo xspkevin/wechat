@@ -31,7 +31,7 @@ return [
      */
     'log' => [
         'level' => 'debug',
-        'file'  => '/Users/xushengping/Projects/wechat.pengpengkeng.com/app/logs/easywechat.log',
+        'file'  => '/Users/ping/Projects/ppk-wechat/app/logs/easywechat.log',
     ],
 
     /**

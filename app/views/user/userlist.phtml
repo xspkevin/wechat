@@ -7,7 +7,7 @@
 <div class="page-container">
     <div class="cl pd-5 bg-1 bk-gray mt-20">
         <span class="l">
-            <a href="javascript:;" onclick="member_add('添加用户','member-add.html','','510')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe62b;</i> 用户批量分组</a>
+            <a href="javascript:;" onclick="user_group(2, '');" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe62b;</i> 用户批量分组</a>
         </span> <span class="r">共有数据：<strong><?php echo isset($total) ? $total : 0;?></strong> 条</span> </div>
     <div class="mt-20">
         <table class="table table-border table-bordered table-hover table-bg table-sort">
@@ -31,7 +31,7 @@
                     <td><?php echo isset($groups[$user['groupid']]) ? $groups[$user['groupid']] : '';?></td>
                     <td><?php echo $user['openid'];?></td>
                     <td class="td-manage">
-                        <a href="javascript:;" onclick="member_add('添加用户','member-add.html','','510')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe62b;</i> 分组</a>
+                        <a href="javascript:;" onclick="user_group(1, '<?php echo $user['groupid'];?>');" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe62b;</i> 分组</a>
                     </td>
                 </tr>
             <?php }} else {?>
@@ -43,3 +43,62 @@
         </table>
     </div>
 </div>
+
+<div id="pop-select-group" class="hide">
+    <form action="" method="post" class="form form-horizontal">
+        <div class="cl" style="margin-top: 20px;">
+            <label class="form-label col-xs-4 col-sm-5">选择分组：</label>
+            <div class="formControls col-xs-8 col-sm-6">
+                <span class="select-box">
+                    <select class="select" size="1" name="group" id="group">
+                        <option value="0" selected>未分组</option>
+                        <option value="100">FAE</option>
+                    </select>
+                </span>
+            </div>
+        </div>
+        <div class="cl" style="margin-top: 20px;">
+            <div class="" style="text-align: center;">
+                <input type="hidden" id="openid" value="" />
+                <input class="btn btn-default radius" type="button" id="btn-cancel" value="&nbsp;&nbsp;取消&nbsp;&nbsp;">&nbsp;&nbsp;&nbsp;&nbsp;
+                <input class="btn btn-primary radius" type="button" id="btn-ok" value="&nbsp;&nbsp;确认&nbsp;&nbsp;">
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript" src="/h-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript">
+/*用户分组*/
+function user_group(type, openid) {
+    if (type == 2) { // 批量分组
+        openid = '';
+    }
+    $("input#openid").val(openid);
+    layer.open({
+        type: 1,
+        shade: false,
+        title: '用户分组', //不显示标题
+        area: ['320px', '180px'],
+        closeBtn: 0, // 不显示关闭按钮
+        content: $('#pop-select-group')
+    });
+}
+$(function() {
+    $("#btn-cancel").click(function () {
+        $("input#openid").val('');
+        layer.closeAll();
+    });
+    $("#btn-ok").click(function() {
+        var openid = $("input#openid").val();
+        var groupid = $("select#group").val();
+        $.post('/user_to_group', {groupid: groupid, openid: openid}, function(data) {
+            if (data.errcode == 0) {
+                window.location.href = "/";
+            } else {
+                layer.msg(data.msg);
+            }
+        });
+    });
+});
+</script>
