@@ -84,6 +84,7 @@ class IndexController extends BaseController
             $openid = $_POST['openid'];
             if ($groupid && $openid)
             {
+                $openid = str_replace(array("\r\n", "\r", "\n", " "), "", $openid);
                 $openidArr = explode(',', $openid);
                 $app = new Application($this->wechat_options);
                 $group = $app->user_group;

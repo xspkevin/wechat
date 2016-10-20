@@ -7,7 +7,8 @@
 <div class="page-container">
     <div class="cl pd-5 bg-1 bk-gray mt-20">
         <span class="l">
-            <a href="javascript:;" onclick="user_group(2, '');" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe62b;</i> 用户批量分组</a>
+            <a href="javascript:;" onclick="user_group(2, '');" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe676;</i> 批量选择分组</a>
+            <a href="javascript:;" onclick="import_group();" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe645;</i> 批量导入分组</a>
         </span> <span class="r">共有数据：<strong><?php echo isset($total) ? $total : 0;?></strong> 条</span> </div>
     <div class="mt-20">
         <table class="table table-border table-bordered table-hover table-bg table-sort">
@@ -70,8 +71,53 @@
     </form>
 </div>
 
+<!-- 批量导入分组 -->
+<div id="pop-import-group" class="hide">
+    <form action="" method="post" class="form form-horizontal">
+        <div class="cl" style="margin-top: 20px;">
+            <label class="form-label col-xs-4 col-sm-3">选择分组：</label>
+            <div class="formControls col-xs-8 col-sm-7">
+                <?php if (isset($groups) && $groups) {?>
+                    <span class="select-box">
+                    <select class="select" size="1" name="import-group" id="import-group">
+                        <?php foreach ($groups as $groupid => $groupname) {?>
+                            <option value="<?php echo $groupid;?>"><?php echo $groupname;?></option>
+                        <?php } ?>
+                    </select>
+                </span>
+                <?php } ?>
+            </div>
+        </div>
+        <div class="cl" style="margin-top: 20px;">
+            <label class="form-label col-xs-4 col-sm-3">openid：</label>
+            <div class="formControls col-xs-8 col-sm-7">
+                <textarea name="openids" id="openids" cols="" rows="" class="textarea"  placeholder=""></textarea>
+                <p style="font-size: 0.8em;">(多个openid以逗号 "," 隔开)</p>
+            </div>
+        </div>
+        <div class="cl" style="margin-top: 20px;">
+            <div class="" style="text-align: center;">
+                <input class="btn btn-default radius" type="button" id="btn-import-cancel" value="&nbsp;&nbsp;取消&nbsp;&nbsp;">&nbsp;&nbsp;&nbsp;&nbsp;
+                <input class="btn btn-primary radius" type="button" id="btn-import-ok" value="&nbsp;&nbsp;确认&nbsp;&nbsp;">
+            </div>
+        </div>
+    </form>
+</div>
+
 <script type="text/javascript" src="/h-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript">
+/*批量导入分组*/
+function import_group() {
+    layer.open({
+        type: 1,
+        shade: false,
+        title: '批量导入用户分组', // 标题
+        area: ['640px', '320px'],
+        closeBtn: 0, // 不显示关闭按钮
+        content: $('#pop-import-group')
+    });
+}
+
 /*用户分组*/
 function user_group(type, openid) {
     if (type == 2) { // 批量分组
@@ -88,7 +134,7 @@ function user_group(type, openid) {
         layer.open({
             type: 1,
             shade: false,
-            title: '用户分组', //不显示标题
+            title: '用户分组', // 标题
             area: ['320px', '180px'],
             closeBtn: 0, // 不显示关闭按钮
             content: $('#pop-select-group')
@@ -112,6 +158,26 @@ $(function() {
                 layer.msg(data.msg);
             }
         });
+    });
+
+    $("#btn-import-cancel").click(function () {
+        layer.closeAll();
+    });
+    $("#btn-import-ok").click(function() {
+        var openid = $.trim($("textarea#openids").val());
+        var groupid = $("select#import-group").val();
+        if (openid) {
+            $.post('/user/user_to_group', {groupid: groupid, openid: openid}, function (data) {
+                if (data.errcode == 0) {
+                    window.location.reload();
+                } else {
+                    layer.msg(data.msg);
+                }
+            });
+        } else {
+            layer.msg('请输入openid');
+            $("textarea#openids").focus();
+        }
     });
 });
 </script>
