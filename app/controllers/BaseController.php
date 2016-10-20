@@ -22,6 +22,10 @@ class BaseController extends Controller
 
     public function beforeExecuteRoute()
     {
-
+        $actionName = $this->router->getActionName();
+        $username = $this->session->has('username') ? $this->session->get('username') : null;
+        if (!$username && !in_array($actionName, array('logout', 'signin'))) {
+            header("Location: /signin");
+        }
     }
 }

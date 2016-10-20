@@ -25,13 +25,13 @@
             <?php if (isset($result) && $result && $result->user_info_list) {?>
             <?php foreach($result->user_info_list as $user) {?>
                 <tr class="text-c">
-                    <td><input type="checkbox" value="<?php echo $user['openid'];?>" name="openid[]"></td>
+                    <td><input type="checkbox" value="<?php echo $user['openid'];?>" name="user-checkbox"></td>
                     <td><img style="width:50px;height:50px;" src="<?php echo $user['headimgurl'];?>" /></td>
                     <td><?php echo $user['nickname'];?></td>
                     <td><?php echo isset($groups[$user['groupid']]) ? $groups[$user['groupid']] : '';?></td>
                     <td><?php echo $user['openid'];?></td>
                     <td class="td-manage">
-                        <a href="javascript:;" onclick="user_group(1, '<?php echo $user['groupid'];?>');" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe62b;</i> 分组</a>
+                        <a href="javascript:;" onclick="user_group(1, '<?php echo $user['openid'];?>');" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe62b;</i> 分组</a>
                     </td>
                 </tr>
             <?php }} else {?>
@@ -49,12 +49,15 @@
         <div class="cl" style="margin-top: 20px;">
             <label class="form-label col-xs-4 col-sm-5">选择分组：</label>
             <div class="formControls col-xs-8 col-sm-6">
+                <?php if (isset($groups) && $groups) {?>
                 <span class="select-box">
                     <select class="select" size="1" name="group" id="group">
-                        <option value="0" selected>未分组</option>
-                        <option value="100">FAE</option>
+                        <?php foreach ($groups as $groupid => $groupname) {?>
+                            <option value="<?php echo $groupid;?>"><?php echo $groupname;?></option>
+                        <?php } ?>
                     </select>
                 </span>
+                <?php } ?>
             </div>
         </div>
         <div class="cl" style="margin-top: 20px;">
@@ -72,17 +75,27 @@
 /*用户分组*/
 function user_group(type, openid) {
     if (type == 2) { // 批量分组
-        openid = '';
+        var openid = '';
+        $("input[name='user-checkbox']:checked").each(function(){
+            openid += $(this).val() + ',';
+        })
+        if (openid) {
+            openid = openid.substring(0, openid.length - 1);
+        }
     }
-    $("input#openid").val(openid);
-    layer.open({
-        type: 1,
-        shade: false,
-        title: '用户分组', //不显示标题
-        area: ['320px', '180px'],
-        closeBtn: 0, // 不显示关闭按钮
-        content: $('#pop-select-group')
-    });
+    if (openid) {
+        $("input#openid").val(openid);
+        layer.open({
+            type: 1,
+            shade: false,
+            title: '用户分组', //不显示标题
+            area: ['320px', '180px'],
+            closeBtn: 0, // 不显示关闭按钮
+            content: $('#pop-select-group')
+        });
+    } else {
+        layer.alert("请选择用户！");
+    }
 }
 $(function() {
     $("#btn-cancel").click(function () {
@@ -92,9 +105,9 @@ $(function() {
     $("#btn-ok").click(function() {
         var openid = $("input#openid").val();
         var groupid = $("select#group").val();
-        $.post('/user_to_group', {groupid: groupid, openid: openid}, function(data) {
+        $.post('/user/user_to_group', {groupid: groupid, openid: openid}, function(data) {
             if (data.errcode == 0) {
-                window.location.href = "/";
+                window.location.reload();
             } else {
                 layer.msg(data.msg);
             }

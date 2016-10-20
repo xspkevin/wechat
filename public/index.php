@@ -75,6 +75,11 @@ try {
     // 设置配置文件
     $di->set('config', $config);
 
+    $di->set('db', function () {
+        $database_options = require_once(APP_PATH . 'app/config/database.config.php');
+        return new DbAdapter($database_options);
+    });
+
     // 设置缓存
     /*
     $di->set('redis', function () use ($config) {

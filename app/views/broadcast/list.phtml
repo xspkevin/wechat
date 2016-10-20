@@ -2,3 +2,128 @@
     <i class="Hui-iconfont">&#xe67f;</i> 首页
     <span class="c-gray en">&gt;</span> 群发消息
 </nav>
+
+<div class="page-container">
+    <div class="cl pd-5 bg-1 bk-gray mt-20">
+        <span class="l">
+            <a href="javascript:;" onclick="msg_add();" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 群发消息</a>
+        </span> <span class="r">共有数据：<strong><?php echo isset($groups['groups']) ? count($groups['groups']) : 0;?></strong> 条</span> </div>
+    <div class="mt-20">
+        <table class="table table-border table-bordered table-hover table-bg table-sort">
+            <thead>
+            <tr class="text-c">
+                <th width="60">用户组</th>
+                <th width="180">群发内容</th>
+                <th width="60">发送总数</th>
+                <th width="60">发送时间</th>
+                <th width="60">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php if (isset($result) && $result) {?>
+                <?php foreach($result as $item) {?>
+                    <tr class="text-c">
+                        <td><?php echo $item->group_name;?></td>
+                        <td><?php echo $item->message;?></td>
+                        <td><?php echo $item->count;?></td>
+                        <td><?php echo $item->created_at;?></td>
+                        <td class="td-manage">
+                            <a title="删除" href="javascript:;" onclick="broadcast_del(<?php echo $item->broadcast_id;?>)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+                        </td>
+                    </tr>
+                <?php }} else {?>
+                <tr class="text-c">
+                    <td colspan="5">还没群发消息</td>
+                </tr>
+            <?php } ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="pop-group-broadcast" class="hide">
+    <form action="" method="post" class="form form-horizontal">
+        <div class="cl" style="margin-top: 20px;">
+            <label class="form-label col-xs-4 col-sm-3">选择分组：</label>
+            <div class="formControls col-xs-8 col-sm-7">
+                <?php if (isset($groups) && $groups) {?>
+                    <span class="select-box">
+                    <select class="select" size="1" name="group" id="group">
+                        <?php foreach ($groups as $groupid => $groupname) {?>
+                            <option value="<?php echo $groupid;?>"><?php echo $groupname;?></option>
+                        <?php } ?>
+                    </select>
+                </span>
+                <?php } ?>
+            </div>
+        </div>
+        <div class="cl" style="margin-top: 20px;">
+            <label class="form-label col-xs-4 col-sm-3">群发内容：</label>
+            <div class="formControls col-xs-8 col-sm-7">
+                <textarea name="content" id="content" cols="" rows="" class="textarea"  placeholder=""></textarea>
+            </div>
+        </div>
+        <div class="cl" style="margin-top: 20px;">
+            <div class="" style="text-align: center;">
+                <input type="hidden" id="openid" value="" />
+                <input class="btn btn-default radius" type="button" id="btn-cancel" value="&nbsp;&nbsp;取消&nbsp;&nbsp;">&nbsp;&nbsp;&nbsp;&nbsp;
+                <input class="btn btn-primary radius" type="button" id="btn-ok" value="&nbsp;&nbsp;确认&nbsp;&nbsp;">
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript" src="/h-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript">
+    /* 添加群发消息 */
+    function msg_add() {
+        layer.open({
+            type: 1,
+            shade: false,
+            title: '群发消息', // 标题
+            area: ['640px', '290px'],
+            closeBtn: 0, // 不显示关闭按钮
+            content: $('#pop-group-broadcast')
+        });
+    }
+
+    /* 删除群发消息 */
+    function broadcast_del(id) {
+        layer.confirm('您确定要删除吗？', {
+            btn: ['是','否']
+        }, function(){
+            $.post('/broadcast/group_del', {id: id}, function(data) {
+                if (data.errcode == 0) {
+                    window.location.reload();
+                } else {
+                    layer.msg(data.msg);
+                }
+            });
+        }, function(){
+
+        });
+    }
+
+    $(function() {
+        $("#btn-cancel").click(function () {
+            layer.closeAll();
+        });
+        $("#btn-ok").click(function() {
+            var group_id = $("select#group").val();
+            var content = $.trim($("textarea#content").val());
+            if (content) {
+                $.post('/broadcast/group_send', {group_id: group_id, content: content}, function(data) {
+                    if (data.errcode == 0) {
+                        layer.msg('发送成功！');
+                        window.location.reload();
+                    } else {
+                        layer.msg(data.msg);
+                    }
+                });
+            } else {
+                layer.msg('请输入要发送的内容！');
+                $("textarea#content").focus();
+            }
+        });
+    });
+</script>

@@ -3,3 +3,127 @@
     <span class="c-gray en">&gt;</span> 用户管理
     <span class="c-gray en">&gt;</span> 用户组
 </nav>
+
+<div class="page-container">
+    <div class="cl pd-5 bg-1 bk-gray mt-20">
+        <span class="l">
+            <a href="javascript:;" onclick="group_add();" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加用户组</a>
+        </span> <span class="r">共有数据：<strong><?php echo isset($groups['groups']) ? count($groups['groups']) : 0;?></strong> 条</span> </div>
+    <div class="mt-20">
+        <table class="table table-border table-bordered table-hover table-bg table-sort">
+            <thead>
+            <tr class="text-c">
+                <th width="50">ID</th>
+                <th width="60">用户组名称</th>
+                <th width="60">用户数</th>
+                <th width="60">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php if (isset($groups) && $groups && $groups['groups']) {?>
+                <?php foreach($groups['groups'] as $group) {?>
+                    <tr class="text-c">
+                        <td><?php echo $group['id'];?></td>
+                        <td><?php echo $group['name'];?></td>
+                        <td><?php echo $group['count'];?></td>
+                        <td class="td-manage">
+                            <?php if (in_array($group['id'], array(0, 1, 2))) {?>
+                                系统用户组不能修改
+                            <?php } else { ?>
+                                <a title="编辑" href="javascript:;" onclick="group_edit('<?php echo $group['id'];?>', '<?php echo $group['name'];?>')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>
+                                <a title="删除" href="javascript:;" onclick="group_del(<?php echo $group['id'];?>)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+                            <?php } ?>
+                        </td>
+                    </tr>
+                <?php }} else {?>
+                <tr class="text-c">
+                    <td colspan="4">还没有用户组</td>
+                </tr>
+            <?php } ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="pop-group" class="hide">
+    <form action="" method="post" class="form form-horizontal">
+        <div class="cl" style="margin-top: 20px;">
+            <label class="form-label col-xs-4 col-sm-5">用户组名称：</label>
+            <div class="formControls col-xs-8 col-sm-6">
+                <input type="text" class="input-text" value="" placeholder="" id="group_name" name="group_name" />
+            </div>
+        </div>
+        <div class="cl" style="margin-top: 20px;">
+            <div class="" style="text-align: center;">
+                <input type="hidden" id="groupid" value="" />
+                <input class="btn btn-default radius" type="button" id="btn-cancel" value="&nbsp;&nbsp;取消&nbsp;&nbsp;">&nbsp;&nbsp;&nbsp;&nbsp;
+                <input class="btn btn-primary radius" type="button" id="btn-ok" value="&nbsp;&nbsp;确认&nbsp;&nbsp;">
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript" src="/h-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript">
+    /* 添加用户组 */
+    function group_add() {
+        $("input#groupid").val('');
+        layer.open({
+            type: 1,
+            shade: false,
+            title: '添加用户组', //不显示标题
+            area: ['320px', '180px'],
+            closeBtn: 0, // 不显示关闭按钮
+            content: $('#pop-group')
+        });
+    }
+
+    /* 编辑用户组 */
+    function group_edit(group_id, group_name) {
+        $("input#group_name").val(group_name);
+        $("input#groupid").val(group_id);
+        layer.open({
+            type: 1,
+            shade: false,
+            title: '编辑用户组', //不显示标题
+            area: ['320px', '180px'],
+            closeBtn: 0, // 不显示关闭按钮
+            content: $('#pop-group')
+        });
+    }
+
+    /* 删除用户组 */
+    function group_del(group_id) {
+        layer.confirm('您确定要删除吗？', {
+            btn: ['是','否']
+        }, function(){
+            $.post('/user/group_del', {group_id: group_id}, function(data) {
+                if (data.errcode == 0) {
+                    window.location.reload();
+                } else {
+                    layer.msg(data.msg);
+                }
+            });
+        }, function(){
+
+        });
+    }
+
+    $(function() {
+        $("#btn-cancel").click(function () {
+            $("input#groupid").val('');
+            layer.closeAll();
+        });
+        $("#btn-ok").click(function() {
+            var group_id = $("input#groupid").val();
+            var group_name = $("input#group_name").val();
+            $.post('/user/group_edit', {group_id: group_id, group_name: group_name}, function(data) {
+                if (data.errcode == 0) {
+                    window.location.reload();
+                } else {
+                    layer.msg(data.msg);
+                }
+            });
+        });
+    });
+</script>

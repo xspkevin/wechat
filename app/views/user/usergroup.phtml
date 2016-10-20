@@ -1,71 +1,112 @@
+<nav class="breadcrumb">
+    <i class="Hui-iconfont">&#xe67f;</i> 首页
+    <span class="c-gray en">&gt;</span> 用户管理
+    <span class="c-gray en">&gt;</span> 用户组
+</nav>
 
-<article class="page-container">
-    <form action="" method="post" class="form form-horizontal" id="form-member-add">
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>用户名：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="username" name="username">
+<div class="page-container">
+    <div class="cl pd-5 bg-1 bk-gray mt-20">
+        <span class="l">
+            <a href="javascript:;" onclick="add_group();" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe62b;</i> 添加用户组</a>
+        </span> <span class="r">共有数据：<strong><?php echo isset($groups['groups']) ? count($groups['groups']) : 0;?></strong> 条</span> </div>
+    <div class="mt-20">
+        <table class="table table-border table-bordered table-hover table-bg table-sort">
+            <thead>
+            <tr class="text-c">
+                <th width="50">ID</th>
+                <th width="60">用户组名称</th>
+                <th width="60">用户数</th>
+                <th width="60">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php if (isset($groups) && $groups && $groups['groups']) {?>
+                <?php foreach($groups['groups'] as $group) {?>
+                    <tr class="text-c">
+                        <td><?php echo $group['id'];?></td>
+                        <td><?php echo $group['name'];?></td>
+                        <td><?php echo $group['count'];?></td>
+                        <td class="td-manage">
+                        </td>
+                    </tr>
+                <?php }} else {?>
+                <tr class="text-c">
+                    <td colspan="4">还没有用户组</td>
+                </tr>
+            <?php } ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="pop-select-group" class="hide">
+    <form action="" method="post" class="form form-horizontal">
+        <div class="cl" style="margin-top: 20px;">
+            <label class="form-label col-xs-4 col-sm-5">选择分组：</label>
+            <div class="formControls col-xs-8 col-sm-6">
+                <?php if (isset($groups) && $groups) {?>
+                    <span class="select-box">
+                    <select class="select" size="1" name="group" id="group">
+                        <?php foreach ($groups as $groupid => $groupname) {?>
+                            <option value="<?php echo $groupid;?>"><?php echo $groupname;?></option>
+                        <?php } ?>
+                    </select>
+                </span>
+                <?php } ?>
             </div>
         </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>性别：</label>
-            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
-                <div class="radio-box">
-                    <input name="sex" type="radio" id="sex-1" checked>
-                    <label for="sex-1">男</label>
-                </div>
-                <div class="radio-box">
-                    <input type="radio" id="sex-2" name="sex">
-                    <label for="sex-2">女</label>
-                </div>
-                <div class="radio-box">
-                    <input type="radio" id="sex-3" name="sex">
-                    <label for="sex-3">保密</label>
-                </div>
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>手机：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="mobile" name="mobile">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>邮箱：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" placeholder="@" name="email" id="email">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-3">附件：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="btn-upload form-group">
-				<input class="input-text upload-url" type="text" name="uploadfile" id="uploadfile" readonly nullmsg="请添加附件！" style="width:200px">
-				<a href="javascript:void();" class="btn btn-primary radius upload-btn"><i class="Hui-iconfont">&#xe642;</i> 浏览文件</a>
-				<input type="file" multiple name="file-2" class="input-file">
-				</span> </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-3">所在城市：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-				<select class="select" size="1" name="city">
-                    <option value="" selected>请选择城市</option>
-                    <option value="1">北京</option>
-                    <option value="2">上海</option>
-                    <option value="3">广州</option>
-                </select>
-				</span> </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-3">备注：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <textarea name="beizhu" cols="" rows="" class="textarea"  placeholder="说点什么...最少输入10个字符" onKeyUp="textarealength(this,100)"></textarea>
-                <p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>
-            </div>
-        </div>
-        <div class="row cl">
-            <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
-                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+        <div class="cl" style="margin-top: 20px;">
+            <div class="" style="text-align: center;">
+                <input type="hidden" id="openid" value="" />
+                <input class="btn btn-default radius" type="button" id="btn-cancel" value="&nbsp;&nbsp;取消&nbsp;&nbsp;">&nbsp;&nbsp;&nbsp;&nbsp;
+                <input class="btn btn-primary radius" type="button" id="btn-ok" value="&nbsp;&nbsp;确认&nbsp;&nbsp;">
             </div>
         </div>
     </form>
-</article>
+</div>
+
+<script type="text/javascript" src="/h-ui.admin/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript">
+    /*用户分组*/
+    function user_group(type, openid) {
+        if (type == 2) { // 批量分组
+            var openid = '';
+            $("input[name='user-checkbox']:checked").each(function(){
+                openid += $(this).val() + ',';
+            })
+            if (openid) {
+                openid = openid.substring(0, openid.length - 1);
+            }
+        }
+        if (openid) {
+            $("input#openid").val(openid);
+            layer.open({
+                type: 1,
+                shade: false,
+                title: '用户分组', //不显示标题
+                area: ['320px', '180px'],
+                closeBtn: 0, // 不显示关闭按钮
+                content: $('#pop-select-group')
+            });
+        } else {
+            layer.alert("请选择用户！");
+        }
+    }
+    $(function() {
+        $("#btn-cancel").click(function () {
+            $("input#openid").val('');
+            layer.closeAll();
+        });
+        $("#btn-ok").click(function() {
+            var openid = $("input#openid").val();
+            var groupid = $("select#group").val();
+            $.post('/user/user_to_group', {groupid: groupid, openid: openid}, function(data) {
+                if (data.errcode == 0) {
+                    window.location.reload();
+                } else {
+                    layer.msg(data.msg);
+                }
+            });
+        });
+    });
+</script>
